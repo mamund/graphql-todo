@@ -5,15 +5,22 @@ var express = require('express');
 var graphqlHTTP = require('express-graphql');
 var { buildSchema } = require('graphql');
 
+// graphql schema
 var schema = buildSchema (`
+  # User object
   type User {
+    # unique ID of the record
     id: String
+    # name of the user
     name: String
   }
 
+  # Root Query type for User objects
   type Query {
     user(id: String): User
+    users: [User]
   }
+
 `);
 
 // local User objects
@@ -32,6 +39,16 @@ var fakeDatabase = {
 var root = {
   user: function({id}) {
     return fakeDatabase[id];
+  },
+  users : () => {
+    var output = [], item, i, x
+    for (var db in fakeDatabase) {
+      item= {},
+      item.id = fakeDatabase[db].id;
+      item.name = fakeDatabase[db].name;
+      output.push(item);
+    }
+    return output;
   }
 };
 
