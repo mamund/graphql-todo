@@ -7,6 +7,7 @@ var { buildSchema } = require('graphql');
 
 // graphql schema
 var schema = buildSchema (`
+
   # Todo object
   type ToDo {
     # Unique ID of the record
@@ -35,7 +36,7 @@ var schema = buildSchema (`
 
 `);
 
-// local User objects
+// in-memory storage
 var storage = {
   '0' : {
     id: '0',
@@ -64,7 +65,7 @@ var storage = {
   },
 }
 
-// root resolver
+// graphql root resolver
 var root = {
   todo: function({id}) {
     return storage[id];
@@ -112,7 +113,7 @@ var root = {
 
 };
 
-// express app
+// express graphiql app
 var app = express();
 app.use('/todo-graphql', graphqlHTTP({
   schema: schema,
